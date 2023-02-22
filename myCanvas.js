@@ -81,12 +81,14 @@ class Ship {
       ctx.rotate((Math.PI * 2) / 3);
     }
     ctx.closePath();
+    //虛線裝飾
     ctx.beginPath();
     ctx.rotate(this.dashDeg);
     ctx.arc(0, 0, this.r + 10, 0, Math.PI * 2);
     ctx.strokeStyle = "white";
     ctx.lineWidth = 2;
     ctx.setLineDash([3]);
+    ctx.closePath();
     ctx.stroke();
     ctx.restore();
   }
@@ -135,6 +137,7 @@ class Enemy {
       x: ww * Math.random(),
       y: 30,
       r: 10 + 5 * Math.random(),
+      dashDeg: 0,
       distance: 1 + 1 * Math.random(),
       v: {
         x: 2,
@@ -155,6 +158,7 @@ class Enemy {
   }
   draw() {
     if (this.hit === 0) {
+      //船身
       ctx.save();
       ctx.translate(this.x, this.y);
       ctx.beginPath();
@@ -164,8 +168,18 @@ class Enemy {
       ctx.arc(0, 0, this.r, 0, Math.PI * 2);
       ctx.fill();
       ctx.closePath();
+      //虛線
+      ctx.beginPath();
+      ctx.rotate(this.dashDeg);
+      ctx.arc(0, 0, this.r + 3, 0, Math.PI * 2);
+      ctx.strokeStyle = "#F5AF5F";
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3]);
+      ctx.closePath();
+      ctx.stroke();
       ctx.restore();
-    } else {
+    } else { 
+      //爆炸
       ctx.save();
       ctx.translate(this.x, this.y);
       for (let i = 0; i < 4; i++) {
@@ -193,6 +207,7 @@ class Enemy {
   }
   update() {
     if (this.hit === 0) {
+      this.dashDeg+=0.05*this.run
       if (time % 600 === this.shot) {
         const eb = new EnemyBullet({
           x: this.x,
@@ -594,6 +609,7 @@ document.getElementById("playPause").addEventListener("click", () => {
   }
 });
 document.getElementById("start").addEventListener("click", () => {
+  init()
   wave++;
   document.getElementById("playPause").classList.remove("displayNone");
   document.getElementById("start").classList.add("displayNone");
