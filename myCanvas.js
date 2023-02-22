@@ -18,7 +18,7 @@ class Ship {
   constructor(args) {
     let def = {
       x: ww / 2,
-      y: wh / 2,
+      y: wh / 2 + 140,
       r: 30,
       deg: 0,
       heart: 3,
@@ -91,9 +91,11 @@ class Ship {
     ctx.restore();
   }
   update() {
-    ship.fortDeg = Math.atan2(mousePos.y - ship.y, mousePos.x - ship.x);
-    ship.deg += 0.01;
-    ship.dashDeg -= 0.02;
+    if (wave > 0) {
+      this.fortDeg = Math.atan2(mousePos.y - ship.y, mousePos.x - ship.x);
+    }
+    this.deg += 0.01;
+    this.dashDeg -= 0.02;
   }
 }
 
@@ -133,7 +135,7 @@ class Enemy {
       x: ww * Math.random(),
       y: 30,
       r: 10 + 5 * Math.random(),
-      distance: 1 + 0.5 * Math.random(),
+      distance: 1 + 1 * Math.random(),
       v: {
         x: 2,
         y: 2,
@@ -146,7 +148,7 @@ class Enemy {
         y: 1,
       },
       boomTime: 0.5 * fps,
-      run: 1,
+      run: Math.random() > 0.5? 1: -1,
     };
     Object.assign(def, args);
     Object.assign(this, def);
@@ -274,7 +276,7 @@ class EnemyBullet {
   }
 }
 
-let ship;
+let ship, shipDemo;
 let bullets = [];
 let time = 0;
 let shot = false;
@@ -284,6 +286,10 @@ let score = 0;
 let enemysBullet = [];
 let pass = 0;
 function init() {
+  shipDemo = new Ship({
+    x: ww / 2,
+    y: wh - 100,
+  })
   ship = new Ship();
   bullets = [];
   time = 0;
@@ -425,6 +431,20 @@ function update() {
   time++;
   //開始前畫面
   if (wave === 0) {
+    shipDemo.update()
+    if (time % 160 === 0 ) {
+      let b = new Bullet({
+        x: shipDemo.x + Math.cos(shipDemo.fortDeg) * 80,
+        y: shipDemo.y + Math.sin(shipDemo.fortDeg) * 80,
+        v: {
+          x: Math.cos(shipDemo.fortDeg) * 5,
+          y: Math.sin(shipDemo.fortDeg) * 5,
+        },
+      });
+      bullets.push(b);
+    }
+    bullets.forEach((b) => b.update());
+    hit()
   }
 
   //遊戲開始
@@ -483,10 +503,35 @@ function draw() {
     ctx.lineTo(ww, i);
   }
   ctx.strokeStyle = "rgba(255,255,255,0.2)";
+  ctx.closePath()
   ctx.stroke();
   ctx.restore();
-
+//開始前
   if (wave === 0) {
+    ctx.save();
+    ctx.font = "18px sans-serif" 
+    ctx.fillStyle="rgba(255,255,255,0.6)" 
+    ctx.fillText("護盾", ww/2 -160, wh-170) 
+    ctx.fillText("砲台", ww/2 +120, wh-15) 
+    ctx.font = "14px sans-serif" 
+    ctx.fillText("可以防禦敵人攻擊", ww/2 -170, wh-136) 
+    ctx.fillText("案住可發射子彈", ww/2 +80, wh-53)
+    ctx.beginPath();
+    ctx.moveTo(ww/2 -45, wh-130)
+    ctx.lineTo(ww/2 -60, wh-160);
+    ctx.moveTo(ww/2 -60, wh-160)
+    ctx.lineTo(ww/2 -170, wh-160);
+    ctx.moveTo(ww/2 +60, wh-90)
+    ctx.lineTo(ww/2 +80, wh-40);
+    ctx.moveTo(ww/2 +80, wh-40)
+    ctx.lineTo(ww/2 +170, wh-40);
+    ctx.closePath()
+    ctx.strokeStyle = "rgba(255,255,255,0.6)"
+    ctx.stroke();
+    ctx.restore();
+
+    shipDemo.draw()
+    bullets.forEach((b) => b.draw());
   }
   //遊戲開始
   if (wave > 0) {
