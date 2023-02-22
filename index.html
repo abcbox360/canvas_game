@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    canvas {
+      width: 100%;
+      max-width: 1000px;
+      max-height: 550px;
+      height: 100%;
+      box-sizing: border-box;
+      outline: none;
+    
+    }
+    .scoreDiv {
+      font-size: 20px;
+      position: fixed;
+      color: white;
+      display: flex;
+      left: calc(50vw - 480px);
+    }
+    .playPause {
+      position: fixed;
+      z-index: 1;
+      width: 50px;
+      height: 50px;
+      right: calc(50vw - 500px);
+      top: 500px;
+    }
+    #start,#return {
+      position: fixed;
+      height: 50px;
+      font-size: 30px;
+      border: 2px solid white;
+      color:white;
+      border-radius: 20px;
+      background-color: transparent;
+      left: calc(50vw - 40px);
+      top: 240px;
+    }
+    #return {
+      top: 400px;
+      left: calc(50vw - 51px);
+    }
+    #return:hover {
+      box-shadow: 0 0 10px rgba(256,256,256);
+    }
+    #return:active {
+      box-shadow: 0 0 20px rgba(256,256,256);
+      color: rgba(256,256,256,0.6);
+      border-color: rgba(256,256,256,0.6)
+    }
+    #start:hover {
+      box-shadow: 0 0 10px rgba(256,256,256);
+    }
+    #start:active {
+      box-shadow: 0 0 20px rgba(256,256,256);
+      color: rgba(256,256,256,0.6);
+      border-color: rgba(256,256,256,0.6)
+    }
+    .displayNone {
+      display: none;
+    }
+    @media screen and (max-width:1000px){
+      .playPause {
+        left:auto;
+        right: 0;
+      }
+      .scoreDiv {
+        left: 15px;
+      }
+    };
+  </style>
+</head>
+
+<body>
+  <div class="scoreDiv" id="scoreDiv">
+    <p>SCORE:</p>
+    <p id="score">0</p>
+  </div>
+  <button id="start">Start</button>
+  <button id="return" class="displayNone">Return</button>
+  <div class="playPause displayNone" id="playPause" ></div>
+  <canvas id="myCanvas" tabindex="0"></canvas>
+  <script src="./myCanvas.js"></script>
+</body>
+
+</html>
